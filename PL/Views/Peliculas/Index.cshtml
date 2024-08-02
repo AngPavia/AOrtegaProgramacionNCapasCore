@@ -1,0 +1,96 @@
+﻿﻿﻿@{
+    @model ML.Pelicula
+
+}
+<style>
+    .limited-text {
+    }
+</style>
+@if (Model.Movies.Count > 0)
+{
+    <h1 class="text-center">Peliculas populares</h1>
+    <hr />
+    <nav aria-label="Page navigation example">
+        <ul class="pagination justify-content-center">
+            <li class="page-item disabled">
+                <a class="page-link" href="@Url.Action("Index", "Peliculas", new {page = ViewBag.page - 1}) tabindex="-1" aria-disabled="true">Anterior</a>
+            </li>
+            <li class="page-item"><a class="page-link" href="@Url.Action("Index", "Peliculas", new {page = 1})">1</a></li>
+            <li class="page-item"><a class="page-link" href="@Url.Action("Index", "Peliculas", new {page = 2})">2</a></li>
+            <li class="page-item"><a class="page-link" href="@Url.Action("Index", "Peliculas", new {page = 3})">3</a></li>
+            <li class="page-item">
+                <a class="page-link" href="@Url.Action("Index", "Peliculas", new {page = ViewBag.page + 1})">Siguiente</a>
+            </li>
+        </ul>
+    </nav>
+    <div class="row row-cols-1 row-cols-md-2 g-4">
+        @foreach (ML.Pelicula movie in Model.Movies)
+        {
+            <div class="col">
+                <div class="card border-primary text-primary" style="max-width: 540px;">
+                    <div class="row g-0">
+                        <div class="col-md-4 ">
+                            <img src="@movie.Imagen" class="img-fluid rounded-start" alt="...">
+                        </div>
+                        <div class="col-md-8">
+                            <div class="card-body text-primary">
+                                <h5 class="card-title">@movie.Nombre</h5>
+                                <hr>
+                                <p class="card-text limited-text">@movie.Descripcion</p>
+                                @* <p class="card-text"><small class="text-muted">Lanzamiento: @movie.Fecha</small></p> *@
+                                <p class="card-text">
+                                    <button class="btn btn-secondary"> Ver <i class="fa-solid fa-circle-play"></i></button>
+                                    <a href="@Url.Action("AddFavorite", "Peliculas", new {idMovie = movie.IdMovie})" class="btn btn-outline-danger"><i class="fa-regular fa-heart"></i> Favorito </a>
+                                   
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+    <br />
+    <nav aria-label="Page navigation example">
+        <ul class="pagination justify-content-center">
+            <li class="page-item disabled">
+                <a class="page-link" href="@Url.Action("Index", "Movie", new {page = ViewBag.page - 1}) tabindex="-1" aria-disabled="true">Anterior</a>
+            </li>
+            <li class="page-item"><a class="page-link" href="@Url.Action("Index", "Movie", new {page = 1})">1</a></li>
+            <li class="page-item"><a class="page-link" href="@Url.Action("Index", "Movie", new {page = 2})">2</a></li>
+            <li class="page-item"><a class="page-link" href="@Url.Action("Index", "Movie", new {page = 3})">3</a></li>
+            <li class="page-item">
+                <a class="page-link" href="@Url.Action("Index", "Movie", new {page = ViewBag.page + 1})">Siguiente</a>
+            </li>
+        </ul>
+    </nav>
+}
+else
+{
+    <div>
+        <h2><i class="fa-solid fa-film fa-10x fa-beat-fade" style="color:crimson"></i></h2>
+        <h2>No se encontraron peliculas ):</h2>
+
+    </div>
+}
+
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+@section Scripts
+    {
+    <script type="text/javascript">
+        var elements = document.getElementsByClassName("limited-text");
+
+        for (var i = 0; i < elements.length; i++) {
+            var element = elements[i];
+            var text = element.innerText;
+
+            if (text.length > 120) {
+                var truncatedText = text.substring(0, 120) + "...";
+                element.innerText = truncatedText;
+            }
+        }
+    </script>
+
+
+
+}

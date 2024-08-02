@@ -1,0 +1,151 @@
+﻿@model ML.Producto
+@{
+    ViewBag.Title = "GetAll";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <h2>Productos</h2>
+            <h5>CRUD con AJAX</h5>
+        </div>
+    </div>
+    <hr />
+    <div class="row mb-2">
+        <div class="col-md-2 offset-11">
+            <button type="button" class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#Modal">+</button>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="table-responsive">
+                <table class="table table-striped hover" id="tdTable">
+                    <thead>
+                        <tr class="table-dark">
+                            <th>Editar</th>
+                            <th>Producto</th>
+                            <th>Descripción</th>
+                            <th>Precio</th>
+                            <th>Imagen</th>
+                            <th>Categoria</th>
+                            <th>Eliminar</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tdBody">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+
+
+    <div class="modal fade" id="Modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="myModalLabel">Producto</h4>
+                </div>
+
+                <div class="modal-body">
+                    @using (Html.BeginForm("Form", "Producto", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                    {
+                        @Html.HiddenFor(model => model.IdProducto ,new { @id = "txtIdProducto" })
+
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="row">
+                                    <div class="col-12">
+                                        @Html.LabelFor(model => model.Nombre, "Producto")
+                                        @Html.TextBoxFor(model => model.Nombre, new { @class = "form-control", @id = "txtNombre" })
+                                    </div>
+                                    <div class="col-12">
+                                        @Html.LabelFor(model => model.Descripcion)
+                                        @Html.TextBoxFor(model => model.Descripcion, new { @class = "form-control" , @id = "txtDescripcion" })
+                                    </div>
+                                    <div class="col-12">
+                                        @Html.LabelFor(model => model.Precio)
+                                        @Html.TextBoxFor(model => model.Precio, new { @class = "form-control", @id = "txtPrecio"  })
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="row">
+                                    <div class="col-12">
+                                        @if (Model.Imagen == null)
+                                        {
+                                            <img id="img" src="https://back.tiendainval.com/backend/admin/backend/web/archivosDelCliente/items/images/20210108100138no_image_product.png" width="100" height="100" />
+                                        }
+                                        else
+                                        {
+                                            <img id="Imagen" src="data:image/jpeg;base64,@Convert.ToBase64String(Model.Imagen)" width="200" height="200" />
+                                        }
+                                        <input name="file" type="file" class="form-control" id="imagen" onchange="validarImagen(), previsualizarImagen(this)" />
+                                        @Html.HiddenFor(model => Model.Imagen, new { @id = "txtImagen" })
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <h2>Categoria</h2>
+                                <div class="row">
+                                    <div class="col-12">
+                                        @Html.LabelFor(model => model.SubCategoria.Categoria.IdCategoria, "Categoria")
+                                        @Html.DropDownListFor(model => model.SubCategoria.Categoria.IdCategoria, new SelectList(Model.SubCategoria.Categoria.Categorias, "IdCategoria", "Nombre"), "Selecciona una opción", new { @class = "form-control", @id = "ddlCategoria", @onchange = "consultarSubCategoria()" })
+                                    </div>
+                                    <div class="col-12">
+                                        @if (Model.SubCategoria.SubCategorias == null)
+                                        {
+                                            @Html.LabelFor(model => model.SubCategoria.IdSubCategoria, "SubCategoria")
+                                            @Html.DropDownListFor(model => model.SubCategoria.IdSubCategoria, new SelectList(string.Empty, "Value", "Text"), "Selecciona una opción", new { @class = "form-control", @id = "ddlSubcategoria" })
+                                        }
+                                        else
+                                        {
+                                            @Html.LabelFor(model => model.SubCategoria.IdSubCategoria, "Subcategoria")
+                                            @Html.DropDownListFor(model => model.SubCategoria.IdSubCategoria, new SelectList(Model.SubCategoria.SubCategorias, "IdSubCategoria", "Nombre"), "Selecciona una opción", new { @class = "form-control", @id = "ddlSubcategoria" })
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+
+
+                        </div>
+
+                        <hr />
+                        <div class="row">
+
+                            <div class="col-md-6">
+                                <h2>&nbsp;</h2>
+                                <div class="row">
+                                </div>
+                            </div>
+                        </div>
+                        
+
+                    }
+                </div>
+
+                <div class="modal-footer">
+
+
+                    <button type="button" class="btn btn-success glyphicon-edit" id="btnAdd" onclick="Agregar()">Agregar</button>
+                     
+                            @Html.ActionLink("Cancelar", "GetAll", new { IdProducto = 0 }, new { @class = "btn btn-danger" })
+                   
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+</div>
+
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+
+<script src="~/js/Producto/ProductoCRUD.js"></script>
+
+
+
